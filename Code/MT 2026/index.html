@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 1); }
+        .option-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .option-btn:not(:disabled):hover { transform: translateX(5px); }
+        .correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="showHome()">
+                <div class="bg-indigo-600 p-1.5 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+                <span class="font-bold text-xl tracking-tight">MT CNE, ANOS, and LSC <span class="text-indigo-600">Quiz</span></span>
+            </div>
+            <div class="hidden md:flex gap-6 font-medium text-slate-600">
+                <button onclick="startQuiz('cne')" class="hover:text-indigo-600 transition">CNE</button>
+                <button onclick="startQuiz('anos')" class="hover:text-indigo-600 transition">ANOS</button>
+                <button onclick="startQuiz('lsc')" class="hover:text-indigo-600 transition">LSC</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+        
+        <!-- Home Screen -->
+        <div id="home-screen" class="fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Master Your IT Skills</h1>
+                <p class="text-slate-600 text-lg max-w-2xl mx-auto">Select a subject below to test your knowledge in Computer Networks, Server OS Administration, and Linux Configuration.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- CNE Card -->
+                <div onclick="startQuiz('cne')" class="glass-card p-8 rounded-2xl cursor-pointer hover:shadow-xl hover:shadow-indigo-100 transition-all group">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Computer Network</h2>
+                    <p class="text-slate-500 text-sm mb-4">OSI Model, TCP/IP, IP addressing, Routing & Switching.</p>
+                    <span class="text-indigo-600 font-semibold text-sm inline-flex items-center gap-1">Start Quiz &rarr;</span>
+                </div>
+
+                <!-- ANOS Card -->
+                <div onclick="startQuiz('anos')" class="glass-card p-8 rounded-2xl cursor-pointer hover:shadow-xl hover:shadow-purple-100 transition-all group">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Network OS</h2>
+                    <p class="text-slate-500 text-sm mb-4">User management, AD basics, Services, Backup & Security.</p>
+                    <span class="text-indigo-600 font-semibold text-sm inline-flex items-center gap-1">Start Quiz &rarr;</span>
+                </div>
+
+                <!-- LSC Card -->
+                <div onclick="startQuiz('lsc')" class="glass-card p-8 rounded-2xl cursor-pointer hover:shadow-xl hover:shadow-green-100 transition-all group">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Linux Server</h2>
+                    <p class="text-slate-500 text-sm mb-4">Command line, SSH, Web Servers, Firewall & Automation.</p>
+                    <span class="text-indigo-600 font-semibold text-sm inline-flex items-center gap-1">Start Quiz &rarr;</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 id="quiz-title" class="text-2xl font-bold text-slate-900">Subject Name</h3>
+                    <p class="text-slate-500 text-sm">Select the correct answer to proceed</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-indigo-600 font-bold text-xl" id="score-display">0</span>
+                    <span class="text-slate-400 font-medium">Points</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-200 rounded-full h-2 mb-8">
+                <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 md:p-8 shadow-sm">
+                <div class="mb-8">
+                    <span id="question-number" class="text-indigo-600 font-bold uppercase tracking-wider text-xs block mb-2">Question 1 of 25</span>
+                    <h4 id="question-text" class="text-xl md:text-2xl font-semibold leading-snug">Loading question...</h4>
+                </div>
+
+                <div id="options-container" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <div id="feedback-container" class="mt-8 p-4 rounded-xl hidden">
+                    <div class="flex items-start gap-3">
+                        <div id="feedback-icon" class="mt-1"></div>
+                        <div>
+                            <p id="feedback-status" class="font-bold text-lg mb-1"></p>
+                            <p id="feedback-explanation" class="text-sm opacity-90"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button id="next-btn" onclick="handleNext()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-indigo-200 transition">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center fade-in py-12">
+            <div class="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-900 mb-2">Quiz Completed!</h2>
+            <p class="text-slate-500 mb-8">Great job finishing the module.</p>
+            
+            <div class="inline-block glass-card p-8 rounded-2xl mb-8 min-w-[280px]">
+                <p class="text-slate-400 font-medium uppercase tracking-widest text-xs mb-1">Your Final Score</p>
+                <div class="text-5xl font-black text-indigo-600" id="final-score">0/25</div>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <p id="performance-msg" class="font-semibold text-slate-700"></p>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="showHome()" class="bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-600 text-slate-600 font-bold py-3 px-8 rounded-xl transition">
+                    Back to Subjects
+                </button>
+                <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-indigo-200 transition">
+                    Try Again
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-auto py-8 text-center text-slate-400 text-sm">
+        &copy; 2026 MT CNE, ANOS, and LSC. All rights reserved.
+    </footer>
+
+    <script>
+        const quizData = {
+            cne: [
+                { q: "Which OSI layer is responsible for routing packets across different networks?", a: ["Data Link", "Network", "Transport", "Session"], c: 1, e: "The Network Layer (Layer 3) handles logical addressing and routing using protocols like IP." },
+                { q: "What is the standard port number for HTTPS?", a: ["80", "21", "443", "25"], c: 2, e: "HTTPS uses port 443 for secure communication, while HTTP uses port 80." },
+                { q: "Which IP address belongs to Class C?", a: ["10.0.0.1", "172.16.0.1", "192.168.1.1", "8.8.8.8"], c: 2, e: "Class C addresses range from 192.0.0.0 to 223.255.255.255." },
+                { q: "What does DHCP stand for?", a: ["Data Hub Control Protocol", "Dynamic Host Configuration Protocol", "Direct Host Connection Process", "Domain Host Control Protocol"], c: 1, e: "DHCP automatically assigns IP addresses and network parameters to hosts." },
+                { q: "Which protocol is used by the 'ping' command?", a: ["TCP", "UDP", "ICMP", "ARP"], c: 2, e: "Ping uses ICMP (Internet Control Message Protocol) echo requests and replies." },
+                { q: "What is the primary function of the Data Link Layer?", a: ["Routing", "Physical addressing (MAC)", "Encryption", "Process-to-process delivery"], c: 1, e: "Layer 2 deals with MAC addresses and frame synchronization." },
+                { q: "In a Star topology, what happens if the central switch fails?", a: ["Only one node goes down", "The network continues to work", "The entire network fails", "Traffic is rerouted automatically"], c: 2, e: "A Star topology relies on a central hub/switch; its failure breaks all connectivity." },
+                { q: "Which device operates at Layer 3 of the OSI model?", a: ["Hub", "Switch", "Router", "Repeater"], c: 2, e: "Routers operate at the Network Layer to direct traffic between different networks." },
+                { q: "What is the size of an IPv6 address?", a: ["32 bits", "64 bits", "128 bits", "256 bits"], c: 2, e: "IPv6 uses 128 bits, providing a much larger address space than IPv4's 32 bits." },
+                { q: "Which protocol resolves a hostname to an IP address?", a: ["DHCP", "DNS", "FTP", "SNMP"], c: 1, e: "DNS (Domain Name System) translates human-readable names like google.com into IP addresses." },
+                { q: "What is the purpose of a Subnet Mask?", a: ["To identify the MAC address", "To distinguish Network ID from Host ID", "To encrypt data", "To increase network speed"], c: 1, e: "The subnet mask defines which part of the IP address represents the network." },
+                { q: "Which layer is responsible for end-to-end error recovery and flow control?", a: ["Physical", "Network", "Transport", "Application"], c: 2, e: "The Transport Layer (Layer 4) ensures reliable data transfer via protocols like TCP." },
+                { q: "What does ARP stand for?", a: ["Address Resolution Protocol", "Active Routing Process", "Application Remote Port", "Advanced Relay Protocol"], c: 0, e: "ARP maps a known IP address to a physical MAC address on a local network." },
+                { q: "A MAC address consists of how many bits?", a: ["24 bits", "32 bits", "48 bits", "64 bits"], c: 2, e: "MAC addresses are 48-bit (6-byte) hardware identifiers." },
+                { q: "Which protocol is 'connectionless'?", a: ["TCP", "UDP", "HTTP", "FTP"], c: 1, e: "UDP is connectionless, meaning it sends packets without establishing a session or guaranteeing delivery." },
+                { q: "What is CIDR?", a: ["A routing protocol", "Classless Inter-Domain Routing", "A type of network cable", "A security firewall"], c: 1, e: "CIDR is a method for allocating IP addresses and IP routing that replaces traditional classes." },
+                { q: "Which layer is the 'Physical' layer in the TCP/IP model?", a: ["Network Access", "Internet", "Transport", "Application"], c: 0, e: "The Network Access layer combines OSI's Physical and Data Link layers." },
+                { q: "What is a VLAN?", a: ["A very large network", "Virtual Local Area Network", "Voice Over LAN", "Verified Local Access Node"], c: 1, e: "VLANs allow network administrators to group hosts even if they are not on the same switch." },
+                { q: "What is the default port for DNS?", a: ["23", "53", "67", "110"], c: 1, e: "DNS primarily uses port 53 for its queries." },
+                { q: "Which command shows the path a packet takes to a destination?", a: ["ping", "ipconfig", "traceroute", "netstat"], c: 2, e: "Traceroute (or tracert) lists all the routers a packet passes through." },
+                { q: "Which device is used to extend the range of a wireless network?", a: ["Switch", "Bridge", "Access Point", "Hub"], c: 2, e: "An Access Point provides wireless connectivity to a wired network." },
+                { q: "What is a 'default gateway'?", a: ["The first PC in a network", "The router interface connecting to other networks", "A DNS server", "A firewall"], c: 1, e: "It is the access point that a computer uses to send information to a computer in another network." },
+                { q: "Which cable type is least susceptible to EMI?", a: ["Cat5e", "Cat6", "Fiber Optic", "Coaxial"], c: 2, e: "Fiber Optic uses light instead of electricity, making it immune to electromagnetic interference." },
+                { q: "What is the loopback address for IPv4?", a: ["127.0.0.1", "192.168.0.1", "0.0.0.0", "255.255.255.255"], c: 0, e: "127.0.0.1 is used to test the network stack on the local machine." },
+                { q: "Which protocol is used for sending emails?", a: ["POP3", "IMAP", "SMTP", "HTTP"], c: 2, e: "SMTP (Simple Mail Transfer Protocol) is used for sending mail, while POP3/IMAP are for receiving." }
+            ],
+            anos: [
+                { q: "What is the primary role of Active Directory?", a: ["File compression", "Centralized user/resource management", "Web hosting", "Database management"], c: 1, e: "AD provides a central location for network administration and security." },
+                { q: "Which protocol is commonly used for Remote Desktop in Windows?", a: ["SSH", "RDP", "VNC", "FTP"], c: 1, e: "RDP (Remote Desktop Protocol) uses port 3389 for graphical remote access." },
+                { q: "What is an 'Organizational Unit' (OU) in AD?", a: ["A physical server", "A container for users/groups", "A network cable", "A type of firewall"], c: 1, e: "OUs are containers used to organize objects and apply Group Policies." },
+                { q: "Which NTFS permission allows a user to delete a file?", a: ["Read", "Write", "Modify", "Read & Execute"], c: 2, e: "Modify permission includes the ability to read, write, and delete files." },
+                { q: "What is the purpose of a RAID 1 configuration?", a: ["Performance", "Data Mirroring", "Parity", "Compression"], c: 1, e: "RAID 1 mirrors data across two disks for redundancy." },
+                { q: "What is a 'Domain Controller'?", a: ["A client PC", "A server responding to security requests", "A router", "A web server"], c: 1, e: "A DC is a server that authenticates users and enforces security policies in a domain." },
+                { q: "Which Windows tool is used for system monitoring and logs?", a: ["Notepad", "Event Viewer", "Device Manager", "Disk Management"], c: 1, e: "Event Viewer records application, security, and system events." },
+                { q: "What does 'DHCP Scope' define?", a: ["The server name", "A range of IP addresses to lease", "The admin password", "The DNS suffix"], c: 1, e: "A scope is a range of IP addresses available for clients on a specific subnet." },
+                { q: "In Network OS, what is the 'Principle of Least Privilege'?", a: ["Give everyone Admin access", "Give users only the access they need", "Delete all guest accounts", "Use short passwords"], c: 1, e: "Granting minimum necessary access reduces security risks from accidents or attacks." },
+                { q: "What is a 'Site-to-Site' VPN used for?", a: ["Connecting two users", "Connecting two entire networks", "Browsing the web anonymously", "Downloading files faster"], c: 1, e: "Site-to-Site VPNs securely connect entire branch offices to a main office." },
+                { q: "Which service translates domain names to IP addresses in a Windows network?", a: ["WINS", "DNS", "DHCP", "IIS"], c: 1, e: "DNS is a core service required for Active Directory to function." },
+                { q: "What is 'Group Policy' (GPO) used for?", a: ["Emailing users", "Configuring user/computer settings centrally", "Managing hardware drivers", "Hosting websites"], c: 1, e: "GPOs define the desktop environment and security settings for users and computers." },
+                { q: "What is the default port for SSH?", a: ["21", "22", "23", "25"], c: 1, e: "SSH (Secure Shell) uses port 22 for secure remote command-line access." },
+                { q: "A 'Full Backup' does what?", a: ["Backs up only changed files", "Backs up all selected files", "Backs up nothing", "Clears the logs"], c: 1, e: "A full backup captures every file regardless of whether it has changed." },
+                { q: "What is the function of a Firewall?", a: ["Speed up internet", "Monitor CPU usage", "Control incoming/outgoing traffic", "Store user passwords"], c: 2, e: "Firewalls act as a barrier between trusted and untrusted networks based on rules." },
+                { q: "What is 'Failover Clustering'?", a: ["Merging two folders", "Keeping services running if a server fails", "Deleting old data", "Encrypting the disk"], c: 1, e: "Clustering provides high availability by allowing a second server to take over if the first fails." },
+                { q: "Which command line tool checks network connectivity in Windows?", a: ["dir", "ping", "taskmgr", "cls"], c: 1, e: "The ping command tests reachability of a host on an IP network." },
+                { q: "What is 'File Sharing'?", a: ["Deleting files", "Allowing others to access files over the network", "Formatting a drive", "Installing a printer"], c: 1, e: "Sharing makes folders accessible to other users over a LAN or WAN." },
+                { q: "Which account has total control over a Windows Server?", a: ["Guest", "Standard User", "Administrator", "Power User"], c: 2, e: "The Administrator account has full rights to manage the server and its security." },
+                { q: "What is 'RDP'?", a: ["Routing Data Protocol", "Remote Desktop Protocol", "Rapid Delivery Process", "Reliable Disk Partition"], c: 1, e: "RDP allows users to connect to a remote computer's graphical interface." },
+                { q: "What is the primary benefit of Virtualization?", a: ["More hardware required", "Running multiple OS on one physical server", "Slower performance", "Harder to manage"], c: 1, e: "Virtualization allows for server consolidation and better resource utilization." },
+                { q: "What does 'UPS' stand for in a server room context?", a: ["Universal Power Socket", "Uninterruptible Power Supply", "User Password System", "Unified Processing System"], c: 1, e: "A UPS provides emergency power to a server when the main power source fails." },
+                { q: "What is 'Packet Sniffing'?", a: ["Repairing cables", "Capturing network traffic for analysis", "Blocking viruses", "Speeding up pings"], c: 1, e: "Sniffing involves monitoring data packets as they travel across a network." },
+                { q: "In a Linux server environment, what is 'Sudo' used for?", a: ["Shutting down", "Executing commands with root privileges", "Listing files", "Creating a zip"], c: 1, e: "Sudo allows a permitted user to execute a command as the superuser." },
+                { q: "Which protocol is used to sync time on a network?", a: ["FTP", "NTP", "SNMP", "HTTP"], c: 1, e: "NTP (Network Time Protocol) ensures all devices have the same accurate time." }
+            ],
+            lsc: [
+                { q: "Which command is used to list files in a Linux directory?", a: ["dir", "list", "ls", "show"], c: 2, e: "'ls' is the standard command to list directory contents." },
+                { q: "What does 'chmod 755' do to a file?", a: ["Deletes it", "Sets RWX for owner, RX for group/others", "Hides it", "Makes it root only"], c: 1, e: "755 gives full rights (7) to the owner and read/execute (5) to others." },
+                { q: "Which file contains the list of users on a Linux system?", a: ["/etc/shadow", "/etc/passwd", "/etc/users", "/var/log/auth"], c: 1, e: "/etc/passwd stores basic user account information." },
+                { q: "How do you start a service called 'apache2' in modern Linux?", a: ["start apache2", "service apache2 go", "systemctl start apache2", "run apache2"], c: 2, e: "systemctl is the command for controlling the systemd system and service manager." },
+                { q: "What is 'apt-get' used for?", a: ["Text editing", "Package management in Debian/Ubuntu", "Checking IP", "Finding files"], c: 1, e: "APT is used to install, update, and remove software packages." },
+                { q: "Which directory is typically used for system log files?", a: ["/home/log", "/var/log", "/etc/log", "/bin/log"], c: 1, e: "/var/log contains most system and application logs." },
+                { q: "What is the purpose of the 'SSH' service?", a: ["Web hosting", "Secure remote shell access", "Database storage", "File printing"], c: 1, e: "SSH provides a secure, encrypted way to manage a server remotely." },
+                { q: "Which command displays the current network IP settings?", a: ["ip addr", "show ip", "netconfig", "view eth0"], c: 0, e: "'ip addr' (or the older 'ifconfig') shows interface IP addresses." },
+                { q: "Which text editor is built into almost every Linux terminal?", a: ["Word", "Vi/Vim", "Notepad", "Chrome"], c: 1, e: "Vi or Vim is a powerful, ubiquitous text editor for the terminal." },
+                { q: "What is a 'cron job'?", a: ["A type of virus", "A scheduled task", "A hardware component", "A user account"], c: 1, e: "Cron is a time-based job scheduler in Unix-like operating systems." },
+                { q: "What does the command 'chown' do?", a: ["Changes file owner", "Changes file name", "Checks network", "Copies file"], c: 0, e: "'chown' (Change Owner) changes the user or group ownership of a file." },
+                { q: "Which file is used to configure static IP addresses in Ubuntu 20.04+?", a: ["/etc/network/interfaces", "Netplan YAML files", "/etc/hosts", "/etc/resolv.conf"], c: 1, e: "Modern Ubuntu uses Netplan for network configuration via YAML files." },
+                { q: "What is the 'Root' user in Linux?", a: ["A beginner user", "The superuser with full system access", "A system process", "A deleted user"], c: 1, e: "The root account is the administrative account that has total control over the system." },
+                { q: "Which command shows the manual for another command?", a: ["help", "info", "man", "guide"], c: 2, e: "'man' (Manual) followed by a command name shows its documentation." },
+                { q: "What is the port for a standard HTTP web server?", a: ["21", "80", "443", "8080"], c: 1, e: "HTTP uses port 80 by default." },
+                { q: "Which command is used to restart a Linux server?", a: ["exit", "reboot", "stop", "close"], c: 1, e: "The 'reboot' command restarts the operating system." },
+                { q: "What is 'Bash'?", a: ["A programming language", "A Unix shell and command language", "A type of database", "A firewall"], c: 1, e: "Bash is the default command interpreter for most Linux distributions." },
+                { q: "What is the use of the 'grep' command?", a: ["Copying files", "Searching text using patterns", "Deleting directories", "Checking RAM"], c: 1, e: "Grep searches for strings or patterns within files." },
+                { q: "How do you check current memory usage?", a: ["ram", "memory", "free -m", "show mem"], c: 2, e: "The 'free' command (with -m for MB) shows used and available memory." },
+                { q: "What does 'Sudo' stand for?", a: ["SuperUser DO", "System User DO", "Standard User Data", "Secure User Operation"], c: 0, e: "Sudo allows a user to perform tasks as the superuser." },
+                { q: "Which directory stores system configuration files?", a: ["/bin", "/etc", "/home", "/usr"], c: 1, e: "/etc is the primary location for system-wide configuration files." },
+                { q: "What is 'UFW'?", a: ["A web server", "Uncomplicated Firewall", "User File Web", "Unix File Wrapper"], c: 1, e: "UFW is a user-friendly frontend for managing iptables firewall rules." },
+                { q: "Which command kills a running process?", a: ["stop", "kill", "end", "terminate"], c: 1, e: "The 'kill' command sends a signal to a process, usually to terminate it." },
+                { q: "What is the command to create a new directory?", a: ["newdir", "mkdir", "create", "dir"], c: 1, e: "'mkdir' stands for Make Directory." },
+                { q: "Which port does MySQL use by default?", a: ["80", "3306", "5432", "27017"], c: 1, e: "MySQL and MariaDB listen on port 3306 by default." }
+            ]
+        };
+
+        let currentSubject = '';
+        let currentIdx = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function showHome() {
+            document.getElementById('home-screen').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+        }
+
+        function startQuiz(subject) {
+            currentSubject = subject;
+            currentIdx = 0;
+            score = 0;
+            isAnswered = false;
+            
+            const titles = { cne: 'Computer Network (CNE)', anos: 'Network OS (ANOS)', lsc: 'Linux Server (LSC)' };
+            document.getElementById('quiz-title').innerText = titles[subject];
+            
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            updateProgress();
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const data = quizData[currentSubject][currentIdx];
+            isAnswered = false;
+            
+            document.getElementById('question-number').innerText = `Question ${currentIdx + 1} of 25`;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('score-display').innerText = score;
+            document.getElementById('feedback-container').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            data.a.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-600 font-medium flex items-center gap-4 bg-white";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500 font-bold text-sm">${String.fromCharCode(65 + i)}</span>
+                    <span>${opt}</span>
+                `;
+                btn.onclick = () => selectAnswer(i);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(choiceIdx) {
+            if (isAnswered) return;
+            isAnswered = true;
+            
+            const data = quizData[currentSubject][currentIdx];
+            const isCorrect = choiceIdx === data.c;
+            const btns = document.querySelectorAll('.option-btn');
+            
+            if (isCorrect) score += 10;
+            document.getElementById('score-display').innerText = score;
+
+            btns.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === data.c) {
+                    btn.classList.add('correct');
+                } else if (i === choiceIdx && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            showFeedback(isCorrect, data.e);
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function showFeedback(correct, explanation) {
+            const feedback = document.getElementById('feedback-container');
+            const status = document.getElementById('feedback-status');
+            const expl = document.getElementById('feedback-explanation');
+            const icon = document.getElementById('feedback-icon');
+            
+            feedback.classList.remove('hidden');
+            status.innerText = correct ? "Correct Answer!" : "Incorrect Answer";
+            expl.innerText = explanation;
+            
+            if (correct) {
+                feedback.className = "mt-8 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800";
+                icon.innerHTML = '<svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>';
+            } else {
+                feedback.className = "mt-8 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800";
+                icon.innerHTML = '<svg class="w-6 h-6 text-rose-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>';
+            }
+        }
+
+        function handleNext() {
+            currentIdx++;
+            if (currentIdx < 25) {
+                updateProgress();
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const percent = (currentIdx / 25) * 100;
+            document.getElementById('progress-bar').style.width = percent + '%';
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            const count = score / 10;
+            document.getElementById('final-score').innerText = `${count}/25`;
+            
+            let msg = "";
+            if (count === 25) msg = "Perfect Score! You're a networking pro.";
+            else if (count >= 20) msg = "Excellent! You have a strong grasp of these concepts.";
+            else if (count >= 15) msg = "Good effort. A bit more study will make you an expert.";
+            else msg = "Keep practicing! Review the explanations to improve.";
+            
+            document.getElementById('performance-msg').innerText = msg;
+        }
+
+        function restartQuiz() {
+            startQuiz(currentSubject);
+        }
+    </script>
+</body>
+</html>

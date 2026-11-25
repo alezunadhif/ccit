@@ -1,0 +1,55 @@
+Natas OverTheWire
+=================
+natas1
+0nzCigAq7t2iALyvU9xcHlYN4MlkIwlq
+natas2
+TguMNxKo1DSa1tujBLuZJnDUlCcUAPlI
+natas3
+3gqisGdR0pjm6tpkDKdIWO2hSvchLeYH
+natas4 (curl -u natas4:<password_natas4> -H "Referer: http://natas5.natas.labs.overthewire.org/" http://natas4.natas.labs.overthewire.org/)
+QryZXc2e0zahULdHrtHxzyYkj59kUxLQ
+natas5
+0n35PkggAPm2zbEpOU802c0x0Msn1ToK
+natas6
+0RoJwHdSKWFTYR5WuiAewauSuNaBXned
+natas7
+bmg8SvU1LizuWjx3y7xkNERkHxGre0GS
+natas8
+xcoXLmzMkoIP9D7hlgPlh9XD7OgLAe5Q
+natas9
+ZE1ck82lmdGIoErlhQgWND6j2Wzz6b6t
+natas10
+t7I5VHvpa14sJTUGV0cbEsbYfFP2dmOu
+natas11
+UJdqkK1pTu6VLt9UHWAgRZz6sVUZ3lEk
+natas12
+yZdkjAYZRd3R7tq7T5kXMjMJlOIkzDeB
+
+PicoCTF
+=======
+Log Hunt picoCTF{us3_y0urlinux_sk1lls_cedfa5fb}
+Bases picoCTF{l3arn_th3_r0p35}
+Riddle Registry picoCTF{puzzl3d_m3tadata_f0und!_42440c7d}
+FANTASY CTF picoCTF{m1113n1um_3d1710n_8d7ec7f5}
+Binary Search  picoCTF{g00d_gu355_de9570b0}
+Super SSH picoCTF{s3cur3_c0nn3ct10n_8306c99d}
+2warm picoCTF{101010}
+Warmed Up picoCTF{61}
+Obedient Cat picoCTF{s4n1ty_v3r1f13d_4a2b35fd}
+Wave a flag picoCTF{b1scu1ts_4nd_gr4vy_755f3544}
+Codebook picoCTF{c0d3b00k_455157_d9aa2df2}
+Magikarp Ground Mission picoCTF{xxsh_0ut_0f_//4t3r_0b24fc4f}
+runme.py picoCTF{run_s4n1ty_run}
+convertme.py picoCTF{4ll_y0ur_b4535_9c3b7d4d}
+PW Crack 1 picoCTF{545h_r1ng1ng_fa343060}
+PW Crack 2 picoCTF{tr45h_51ng1ng_489dea9a}
+Insp3ct0r picoCTF{tru3_d3t3ct1ve_0r_ju5t_lucky?302945a7}
+fixme1.py picoCTF{1nd3nt1ty_cr1515_182342f7}
+fixme2.py picoCTF{3qu4l1ty_n0t_4551gnm3nt_f6a5aefc}
+13 picoCTF{not_too_bad_of_a_problem}
+Lets Warmn Up picoCTF{p}
+where are the robots picoCTF{ca1cu1at1ng_Mach1n3s_cc6b1}
+logon picoCTF{th3_c0nsp1r4cy_l1v3s_4d184b0d}
+dont-use-client-side picoCTF{no_clients_plz_2eb02b45}
+The Numbers picoCTF{thenumbersmason}
+Mod 26 picoCTF{next_time_I'll_try_2_rounds_of_rot13_45559abd}

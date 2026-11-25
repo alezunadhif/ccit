@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT CNE, ANOS, and LSC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f4f8; }
+        .glass-card { background: rgba(255, 255, 255, 0.98); border: 1px solid #e2e8f0; }
+        .option-btn { transition: all 0.2s ease; border: 2px solid #e2e8f0; }
+        .option-btn:not(:disabled):hover { border-color: #4f46e5; background-color: #f5f3ff; transform: translateY(-1px); }
+        .correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .hidden { display: none; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-slide { animation: slideIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-900">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="showHome()">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <span class="font-bold text-xl tracking-tighter uppercase text-slate-800">MT <span class="text-indigo-600">Exam</span></span>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="showHome()" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md transition">Dashboard</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8">
+        
+        <!-- Dashboard Home -->
+        <div id="home-screen" class="animate-slide">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Network Competency Evaluation</h1>
+                <p class="text-slate-500 text-lg max-w-2xl mx-auto">Select an exam module below. Each module consists of 30 multiple-choice questions with instant technical explanations.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- CNE Card -->
+                <div onclick="startQuiz('cne')" class="glass-card p-6 rounded-3xl cursor-pointer hover:shadow-2xl hover:shadow-indigo-100 transition-all group">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-800">Computer Network (CNE)</h3>
+                    <p class="text-slate-500 text-sm mb-6">Covers OSI Layers, CIDR Subnetting, Dynamic Routing, and Core Protocols.</p>
+                    <div class="flex items-center text-indigo-600 font-bold text-sm uppercase tracking-wider">
+                        Start Exam <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </div>
+                </div>
+
+                <!-- ANOS Card -->
+                <div onclick="startQuiz('anos')" class="glass-card p-6 rounded-3xl cursor-pointer hover:shadow-2xl hover:shadow-red-100 transition-all group">
+                    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-800">Network OS (ANOS)</h3>
+                    <p class="text-slate-500 text-sm mb-6">Server Admin, RHEL Specialization, Active Directory, and Infrastructure Security.</p>
+                    <div class="flex items-center text-red-600 font-bold text-sm uppercase tracking-wider">
+                        Start Exam <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </div>
+                </div>
+
+                <!-- LSC Card -->
+                <div onclick="startQuiz('lsc')" class="glass-card p-6 rounded-3xl cursor-pointer hover:shadow-2xl hover:shadow-emerald-100 transition-all group">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-800">Linux Config (LSC)</h3>
+                    <p class="text-slate-500 text-sm mb-6">Apache/Nginx Config, SSH Hardening, User Management, and Automation.</p>
+                    <div class="flex items-center text-emerald-600 font-bold text-sm uppercase tracking-wider">
+                        Start Exam <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quiz-screen" class="hidden animate-slide">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <h2 id="quiz-title" class="text-2xl font-black text-slate-800 tracking-tight">Module Name</h2>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span id="q-category-tag" class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-bold uppercase rounded">Official Exam</span>
+                        <span class="text-slate-400 text-sm font-medium" id="question-count-text">Question 1 / 30</span>
+                    </div>
+                </div>
+                <div class="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Current Score</p>
+                        <p class="text-2xl font-black text-indigo-600 leading-none" id="live-score">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-200 h-3 rounded-full mb-10 overflow-hidden shadow-inner">
+                <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-700" style="width: 0%"></div>
+            </div>
+
+            <div class="glass-card rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-slate-200/50">
+                <div class="mb-10">
+                    <h4 id="question-text" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">Loading question...</h4>
+                </div>
+
+                <div id="options-grid" class="grid grid-cols-1 gap-4">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section -->
+                <div id="feedback-panel" class="mt-10 p-6 rounded-3xl hidden">
+                    <div class="flex gap-4">
+                        <div id="feedback-icon-container" class="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"></div>
+                        <div>
+                            <h5 id="feedback-title" class="font-bold text-lg mb-1"></h5>
+                            <p id="feedback-desc" class="text-sm leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 flex justify-end">
+                    <button id="btn-next" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-black text-white px-10 py-4 rounded-2xl font-bold shadow-lg transition-all active:scale-95">
+                        Next Question &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="result-screen" class="hidden animate-slide text-center py-10">
+            <div class="mb-6">
+                <div class="w-24 h-24 bg-indigo-600 text-white rounded-[2rem] flex items-center justify-center mx-auto rotate-12 mb-8 shadow-xl shadow-indigo-200">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h2 class="text-4xl font-black text-slate-900 mb-2 tracking-tight">Completed!</h2>
+                <p class="text-slate-500 font-medium">You have finished the entire module.</p>
+            </div>
+
+            <div class="max-w-md mx-auto bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm mb-10">
+                <p class="text-slate-400 font-bold uppercase text-xs tracking-widest mb-4">Your Final Score</p>
+                <div class="text-7xl font-black text-slate-900 mb-4" id="final-score-val">0</div>
+                <p id="result-status" class="text-indigo-600 font-bold text-lg"></p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="showHome()" class="bg-white border-2 border-slate-200 hover:border-slate-300 px-8 py-4 rounded-2xl font-bold transition">Back to Menu</button>
+                <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-indigo-200 transition">Try Again</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-auto py-8 text-center text-slate-400 text-xs font-semibold tracking-widest uppercase">
+        MT CNE, ANOS, & LSC Professional Training
+    </footer>
+
+    <script>
+        const quizData = {
+            cne: [
+                { q: "If a host has IP 192.168.1.50 with a /24 subnet mask, what is its Network ID?", a: ["192.168.1.1", "192.168.1.0", "192.168.1.255", "192.168.0.0"], c: 1, e: "A /24 subnet mask (255.255.255.0) means the first 24 bits are network. Thus host 192.168.1.50 belongs to network 192.168.1.0." },
+                { q: "How many valid host addresses are available in a /30 subnet?", a: ["4", "6", "2", "8"], c: 2, e: "/30 has 4 total IP addresses, but 1 is for network and 1 for broadcast, leaving only 2 for valid hosts." },
+                { q: "Which of the following is the valid host range for the subnet 10.0.0.0/26?", a: ["10.0.0.1 - 10.0.0.62", "10.0.0.0 - 10.0.0.63", "10.0.0.1 - 10.0.0.254", "10.0.0.1 - 10.0.0.30"], c: 0, e: "/26 divides a block into 64 IPs. Network is .0, Broadcast is .63. Valid hosts are .1 to .62." },
+                { q: "What is the primary function of the ARP protocol?", a: ["Convert domain names to IP", "Find MAC address based on a known IP", "Send emails", "Manage packet routing"], c: 1, e: "Address Resolution Protocol (ARP) is used to find the physical address (MAC) of a known logical address (IP)." },
+                { q: "In the OSI model, at which layer does Routing (path selection) occur?", a: ["Layer 2 - Data Link", "Layer 4 - Transport", "Layer 3 - Network", "Layer 7 - Application"], c: 2, e: "The Network Layer is responsible for logical addressing and determining the best path between networks." },
+                { q: "The Wildcard mask for a 255.255.255.248 subnet mask is...", a: ["0.0.0.7", "0.0.0.15", "0.0.0.3", "0.0.0.255"], c: 0, e: "A wildcard mask is the inverse of a subnet mask. 255-248 = 7." },
+                { q: "IP Address 172.16.10.100 belongs to which IP Class?", a: ["Class A", "Class B", "Class C", "Class D"], c: 1, e: "Class B range is 128.0.0.0 to 191.255.255.255." },
+                { q: "What is the default subnet mask for a Class C IP address?", a: ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"], c: 2, e: "Class C uses 24 bits for the network by default (/24)." },
+                { q: "Which protocol is used to manage secure file transfers over SSH?", a: ["FTP", "TFTP", "SFTP", "HTTP"], c: 2, e: "SFTP (Secure FTP) runs over the SSH protocol (port 22) for encryption." },
+                { q: "What is the Broadcast address for IP 192.168.10.5/29?", a: ["192.168.10.7", "192.168.10.15", "192.168.10.255", "192.168.10.0"], c: 0, e: "/29 has increments of 8. The block is .0 to .7. Thus broadcast is .7." },
+                { q: "Which network device works at OSI Layer 2 to divide collision domains?", a: ["Hub", "Repeater", "Switch", "Router"], c: 2, e: "Switches work at Layer 2 and create separate collision domains for each port." },
+                { q: "What is the primary purpose of ICMP?", a: ["Error messages and control info", "Data encryption", "Mapping IP to MAC", "User management"], c: 0, e: "Internet Control Message Protocol (ICMP) is used by tools like ping and traceroute." },
+                { q: "What is the main difference between TCP and UDP?", a: ["TCP is faster than UDP", "TCP is connection-oriented, UDP is not", "UDP handles data retransmission", "TCP is used for live video"], c: 1, e: "TCP guarantees delivery (connection-oriented), while UDP focuses on speed without delivery guarantees." },
+                { q: "What is the Class A Private IP range?", a: ["172.16.0.0 - 172.31.255.255", "192.168.0.0 - 192.168.255.255", "10.0.0.0 - 10.255.255.255", "169.254.0.0 - 169.254.255.255"], c: 2, e: "IP 10.0.0.0/8 is the standard Class A private range." },
+                { q: "Which port number is used by the DNS protocol?", a: ["80", "53", "21", "25"], c: 1, e: "Domain Name System (DNS) uses port 53 for both TCP and UDP." },
+                { q: "What does CIDR stand for?", a: ["Classless Inter-Domain Routing", "Centralized Inter-Data Resource", "Classfull Internal Domain Route", "Common Interface Data Redundancy"], c: 0, e: "CIDR is a method for IP allocation that does not follow strict classes." },
+                { q: "In a full Mesh topology, how many cables are needed for 5 nodes?", a: ["5", "10", "20", "15"], c: 1, e: "Formula: n(n-1)/2. So 5(4)/2 = 10 cables." },
+                { q: "The Wildcard mask for /24 is...", a: ["0.0.0.0", "0.0.0.255", "255.255.255.0", "0.255.255.255"], c: 1, e: "Subnet mask /24 is 255.255.255.0, so the wildcard is 0.0.0.255." },
+                { q: "What is the function of a Gateway in network settings?", a: ["Connects two different networks", "Speeds up internet connection", "Assigns automatic IP addresses", "Stores website cache"], c: 0, e: "A Gateway acts as an exit point for data packets heading to other networks." },
+                { q: "How many subnets are created by borrowing 3 bits from a Class C network?", a: ["2", "4", "8", "16"], c: 2, e: "Subnets = 2^n (borrowed bits). 2^3 = 8." },
+                { q: "What is VLSM?", a: ["Virtual Local Server Management", "Variable Length Subnet Masking", "Very Large System Memory", "Verified Logical Subnet Map"], c: 1, e: "VLSM allows creating subnets of different sizes within one large network." },
+                { q: "IP 192.168.5.10/30 is in which subnet block?", a: ["1st Block (0-3)", "2nd Block (4-7)", "3rd Block (8-11)", "4th Block (12-15)"], c: 2, e: "Multiples of 4: 0, 4, 8, 12. IP .10 is in the range 8 to 11 (3rd block)." },
+                { q: "Which routing protocol uses the Link State algorithm?", a: ["RIP", "EIGRP", "OSPF", "BGP"], c: 2, e: "Open Shortest Path First (OSPF) is a common Link State routing protocol." },
+                { q: "Which of the following is an IPv6 address?", a: ["192.168.1.1", "2001:0db8:85a3:0000:0000:8a2e:0370:7334", "10.0.0.1", "AC:DE:48:00:11:22"], c: 1, e: "IPv6 is represented in 128-bit hexadecimal format." },
+                { q: "What is the use of NAT (Network Address Translation)?", a: ["Translate Private IP to Public IP", "Limit user speed", "Record website logs", "Block viruses"], c: 0, e: "NAT allows many private IPs to access the internet using a single public IP." },
+                { q: "The 7 OSI Layers from bottom to top are...", a: ["Physical-Data Link-Network-Transport-Session-Presentation-Application", "Application-Presentation-Session-Transport-Network-Data Link-Physical", "Data Link-Physical-Transport-Network-Session-Presentation-Application", "Physical-Network-Data Link-Transport-Session-Presentation-Application"], c: 0, e: "Standard order starts from Layer 1 (Physical) to Layer 7 (Application)." },
+                { q: "How many bits are the Source and Destination Ports in a TCP header?", a: ["8 bits", "16 bits", "32 bits", "64 bits"], c: 1, e: "Port numbers in TCP/UDP are 16 bits (0 - 65535)." },
+                { q: "Category 6 (Cat6) UTP cable supports speeds up to...", a: ["100 Mbps", "1 Gbps", "10 Gbps", "100 Gbps"], c: 2, e: "Cat6 supports up to 10 Gbps over short distances (up to 55 meters)." },
+                { q: "What is the function of the DHCP protocol?", a: ["Assign IP addresses dynamically", "Convert domains to IP", "Send broadcast data", "Find the shortest route"], c: 0, e: "DHCP automates the assignment of IP addresses to network clients." },
+                { q: "The Wildcard mask for /30 is...", a: ["0.0.0.3", "0.0.0.255", "0.0.0.7", "0.0.0.1"], c: 0, e: "A /30 mask is 255.255.255.252. Thus 255-252 = 3 (0.0.0.3)." }
+            ],
+            anos: [
+                { q: "In RHEL 8+, what is the new command replacing 'yum'?", a: ["apt", "dnf", "pkg", "pacman"], c: 1, e: "DNF (Dandified YUM) is the next-gen YUM and the standard in RHEL/CentOS 8+." },
+                { q: "How do you register an RHEL system via terminal?", a: ["rhel-register", "subscription-manager register", "yum register", "dnf-client"], c: 1, e: "subscription-manager is used to manage Red Hat subscriptions and repositories." },
+                { q: "Which service handles default firewall management in RHEL?", a: ["iptables", "ufw", "firewalld", "nftables"], c: 2, e: "Firewalld is the default firewall management daemon in Red Hat/Fedora." },
+                { q: "What command checks the Apache service status in RHEL?", a: ["service status apache", "systemctl status httpd", "check service httpd", "apache2 -status"], c: 1, e: "In RHEL, the Apache package is named 'httpd' and managed via systemctl." },
+                { q: "What is the function of SELinux?", a: ["Built-in antivirus", "Mandatory Access Control (MAC)", "Root password replacement", "CPU accelerator"], c: 1, e: "SELinux provides extra security layers through labels on files and processes." },
+                { q: "In Windows Server, which role manages user identities?", a: ["DHCP Server", "Active Directory Domain Services", "File Server", "DNS Server"], c: 1, e: "AD DS is the central database for domain security and management." },
+                { q: "Where are RHEL repository files located?", a: ["/etc/apt/sources.list", "/etc/yum.repos.d/", "/var/cache/dnf", "/home/user/repo"], c: 1, e: ".repo files for installation sources are stored in /etc/yum.repos.d/." },
+                { q: "Which RHEL tool provides a web interface for system management?", a: ["top", "htop", "cockpit", "webmin"], c: 2, e: "Cockpit is a web-based server management interface supported by Red Hat." },
+                { q: "What does RPM stand for?", a: ["Red Hat Package Manager", "Real Process Monitoring", "Remote Protocol Management", "Rapid Packet Management"], c: 0, e: "RPM is the basic package management system used by RHEL and its derivatives." },
+                { q: "How do you set SELinux to 'Permissive' without a reboot?", a: ["setenforce 0", "setenforce 1", "selinux-disable", "config-selinux"], c: 0, e: "setenforce 0 changes to permissive mode (logging only), 1 is enforcing (blocking)." },
+                { q: "What is the name of the super administrator in Linux/RHEL?", a: ["admin", "super", "root", "system"], c: 2, e: "The 'root' user has unrestricted access to the entire system." },
+                { q: "How do you upgrade all packages in RHEL?", a: ["yum update", "dnf upgrade", "apt update", "All of the above"], c: 1, e: "dnf upgrade (or yum update) updates installed packages to their latest versions." },
+                { q: "In Windows Server, what is a 'Forest'?", a: ["A single domain", "A collection of domain trees", "A log directory", "A computer unit"], c: 1, e: "A Forest is the top-level container in an Active Directory logical structure." },
+                { q: "Which protocol does Active Directory use for authentication?", a: ["HTTP", "Kerberos", "SMTP", "RDP"], c: 1, e: "Kerberos is the default protocol for domain security authentication." },
+                { q: "The 'sshd' service runs on which default port?", a: ["80", "22", "443", "3389"], c: 1, e: "Port 22 is the standard for Secure Shell access." },
+                { q: "How do you restart an RHEL server via command line?", a: ["exit", "stop now", "reboot", "close"], c: 2, e: "The reboot command cleanly restarts the operating system." },
+                { q: "Which command searches for text within files?", a: ["find", "look", "grep", "search"], c: 2, e: "Grep (Global Regular Expression Print) is used to filter text patterns." },
+                { q: "Which Windows Server role assigns IP addresses automatically?", a: ["DNS", "DHCP", "IIS", "Hyper-V"], c: 1, e: "DHCP server leases IP addresses to client computers." },
+                { q: "Which tool manages disks and partitions in Linux?", a: ["fdisk", "parted", "lsblk", "All of the above"], c: 3, e: "fdisk, parted, and lsblk are standard disk management tools." },
+                { q: "The 'chown' command is used for...", a: ["Changing file permissions", "Changing file owner", "Deleting files", "Moving files"], c: 1, e: "chown (CHange OWNer) replaces the user or group owner of a file." },
+                { q: "What is the difference between 'su' and 'sudo'?", a: ["No difference", "su switches users, sudo runs commands as another user", "sudo is for reboots", "su installs packages"], c: 1, e: "'su' logs you in as another user; 'sudo' runs a specific command with elevated rights." },
+                { q: "Where is the main system log file in RHEL?", a: ["/var/log/messages", "/var/log/syslog", "/etc/log", "/root/log"], c: 0, e: "RHEL uses /var/log/messages for general system event logging." },
+                { q: "How do you check disk space usage in Linux?", a: ["listdisk", "df -h", "show drive", "mount -l"], c: 1, e: "'df -h' displays free disk space in a human-readable format." },
+                { q: "Where is the SSH server configuration file?", a: ["/etc/ssh/ssh_config", "/etc/ssh/sshd_config", "/var/ssh/config", "/root/ssh/config"], c: 1, e: "sshd_config (with 'd' for daemon) controls SSH server behavior." },
+                { q: "How do you allow HTTP traffic in RHEL's firewalld?", a: ["firewall-cmd --add-service=http --permanent", "ufw allow 80", "iptables -A INPUT -p tcp --dport 80", "open http"], c: 0, e: "This command opens the http service and saves it permanently." },
+                { q: "What is 'Swap Space' in Linux?", a: ["Disk-based memory backup", "User file storage", "Primary RAM", "Trash folder"], c: 0, e: "Swap is used as an extension of RAM onto the disk." },
+                { q: "How do you compress files into .tar.gz format?", a: ["zip", "tar -czvf", "compress", "make-tar"], c: 1, e: "-c (create), -z (gzip), -v (verbose), -f (file)." },
+                { q: "What is a DNS Forwarder?", a: ["Clears DNS cache", "Forwards unknown queries to external servers", "Speeds up booting", "Secures websites"], c: 1, e: "A forwarder sends unknown DNS requests to external DNS servers (like Google DNS)." },
+                { q: "Which command views file contents without opening them?", a: ["edit", "view", "cat", "open"], c: 2, e: "Cat (concatenate) prints the entire file content to the terminal." },
+                { q: "What does RHEL stand for?", a: ["Red Hat Enterprise Linux", "Regional Hosted Electronic Linux", "Reliable Hardware Electronic Layout", "Real High Energy Linux"], c: 0, e: "Red Hat Enterprise Linux is a distribution for business markets." }
+            ],
+            lsc: [
+                { q: "How do you install Nginx on Debian/Ubuntu?", a: ["yum install nginx", "apt-get install nginx", "dnf install nginx", "brew install nginx"], c: 1, e: "Debian and Ubuntu use the APT package manager." },
+                { q: "Where is the default Apache Document Root?", a: ["/var/www/html", "/etc/apache2/www", "/root/web", "/home/html"], c: 0, e: "/var/www/html is the standard location for web files." },
+                { q: "How do you test Nginx configuration before restarting?", a: ["nginx -test", "nginx -t", "service nginx check", "check-nginx"], c: 1, e: "nginx -t verifies configuration syntax." },
+                { q: "What does permission 644 mean?", a: ["Everyone can RW", "Owner RW, Group/Others R", "Owner RWX, Others R", "Root only"], c: 1, e: "6 (Read/Write) for owner, 4 (Read) for group and others." },
+                { q: "How do you change the default SSH port (22)?", a: ["Edit /etc/ssh/sshd_config", "Change firewall only", "Cannot be changed", "Rename ssh file"], c: 0, e: "The 'Port' parameter in sshd_config must be modified followed by a service restart." },
+                { q: "Which command schedules automatic tasks in Linux?", a: ["taskmgr", "cronjob", "crontab -e", "timer -s"], c: 2, e: "crontab -e opens the editor to schedule scripts periodically." },
+                { q: "Which port does MariaDB/MySQL use by default?", a: ["3306", "5432", "8080", "1433"], c: 0, e: "Port 3306 is the standard for MySQL and MariaDB." },
+                { q: "What does 'tail -f /var/log/syslog' do?", a: ["Deletes logs", "Views logs in real-time", "Counts log lines", "Emails logs"], c: 1, e: "-f (follow) tracks new lines added to a file live." },
+                { q: "How do you quickly create an empty file?", a: ["create", "new", "touch", "empty"], c: 2, e: "'touch filename' creates a file if it doesn't exist." },
+                { q: "How do you force-delete a folder and its contents?", a: ["del -f", "rm -rf", "delete -all", "erase"], c: 1, e: "rm (remove), -r (recursive), -f (force)." },
+                { q: "Where are Apache Virtual Host files usually stored?", a: ["/etc/apache2/sites-available/", "/etc/apache2/conf.d/", "/var/www/sites/", "/root/vhosts/"], c: 0, e: "Sites-available contains the configs which are then linked to sites-enabled." },
+                { q: "What does 'chmod +x script.sh' do?", a: ["Hides the script", "Makes script executable", "Deletes script", "Copies script"], c: 1, e: "The +x flag grants Execution permission." },
+                { q: "What is a 'Symlink' in Linux?", a: ["File copy", "Shortcut/pointer to another file", "Compression tool", "Folder encryption"], c: 1, e: "Symlinks act as references to other file or folder locations." },
+                { q: "How do you see processes sorted by RAM usage?", a: ["list-mem", "top", "show-proc", "ram-view"], c: 1, e: "'top' or 'htop' displays active processes based on resource consumption." },
+                { q: "How do you change your own password?", a: ["changepass", "passwd", "userpass", "modify-p"], c: 1, e: "Type 'passwd' in the terminal to set a new password." },
+                { q: "How do you save and exit in Vi/Vim?", a: [":q!", ":wq", ":exit", ":save"], c: 1, e: "w (write) and q (quit)." },
+                { q: "The 'hostnamectl' command is used to...", a: ["View IP", "Change system hostname", "Restart network", "Check disk"], c: 1, e: "Used for managing the system's hostname." },
+                { q: "What is inside /etc/hosts?", a: ["User list", "Manual IP-to-hostname mappings", "Login logs", "Root password"], c: 1, e: "Used for local name resolution before querying DNS." },
+                { q: "What does the 'wget' command do?", a: ["Send messages", "Download files from the web", "Delete files", "Virus check"], c: 1, e: "wget is a utility to download content from web servers via CLI." },
+                { q: "How do you shutdown the system instantly?", a: ["shutdown now", "poweroff", "halt", "All of the above"], c: 3, e: "All these commands are used to stop server operations." },
+                { q: "What is a 'LAMP stack'?", a: ["Linux, Apache, MySQL, PHP", "Linux, Apple, Mac, Perl", "Light, Advanced, Modern, Power", "Linux, Apache, Microsoft, Python"], c: 0, e: "A popular technology stack for building web applications." },
+                { q: "What is /etc/resolv.conf used for?", a: ["IP configuration", "DNS Resolver configuration", "Firewall configuration", "Repository list"], c: 1, e: "It determines which DNS servers the system uses for lookups." },
+                { q: "What does 'sudo ufw allow 22/tcp' mean?", a: ["Disable SSH", "Allow SSH traffic through firewall", "Delete port 22", "Secure port 22"], c: 1, e: "UFW allows incoming traffic on port 22 (SSH)." },
+                { q: "What does 'mv file1.txt /home/user/' do?", a: ["Delete file", "Move file", "Copy file", "Rename file"], c: 1, e: "MV (Move) is used to move or rename files." },
+                { q: "How do you test a connection to a specific remote port?", a: ["ping", "traceroute", "telnet or nc", "cat"], c: 2, e: "Telnet or Netcat (nc) can check if a target port is open." },
+                { q: "What is a key difference between Apache and Nginx?", a: ["Nginx handles high traffic better", "Apache is for Windows only", "Nginx doesn't support PHP", "No difference"], c: 0, e: "Nginx uses an event-driven architecture that is more efficient for scaling." },
+                { q: "What does 'uptime' show?", a: ["Current time", "How long the server has been running", "Server temp", "Internet speed"], c: 1, e: "Displays the duration since the last system boot." },
+                { q: "Where is the main Nginx config file?", a: ["/etc/nginx/nginx.conf", "/var/nginx/conf", "/root/nginx.conf", "/usr/local/nginx/etc"], c: 0, e: "The main configuration is at /etc/nginx/nginx.conf." },
+                { q: "Which command finds the location of an executable?", a: ["find", "whereis", "which", "Both B & C"], c: 3, e: "whereis and which show the binary path of a program." },
+                { q: "What is the function of a Load Balancer?", a: ["Distribute traffic across servers", "Speed up CPU", "Add disk capacity", "Prevent spam"], c: 0, e: "Load Balancers distribute requests to prevent single-server overload." }
+            ]
+        };
+
+        let currentSubject = '';
+        let currentIdx = 0;
+        let score = 0;
+        let isAnswered = false;
+
+        function showHome() {
+            document.getElementById('home-screen').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function startQuiz(subject) {
+            currentSubject = subject;
+            currentIdx = 0;
+            score = 0;
+            isAnswered = false;
+            
+            const titles = { cne: 'Computer Network (CNE)', anos: 'Network Admin (ANOS)', lsc: 'Linux Config (LSC)' };
+            document.getElementById('quiz-title').innerText = titles[subject];
+            
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            updateProgress();
+            renderQuestion();
+            window.scrollTo(0,0);
+        }
+
+        function renderQuestion() {
+            const data = quizData[currentSubject][currentIdx];
+            isAnswered = false;
+            
+            document.getElementById('question-count-text').innerText = `Question ${currentIdx + 1} / 30`;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('live-score').innerText = score;
+            document.getElementById('feedback-panel').classList.add('hidden');
+            document.getElementById('btn-next').classList.add('hidden');
+            
+            const container = document.getElementById('options-grid');
+            container.innerHTML = '';
+            
+            data.a.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-5 rounded-2xl font-semibold flex items-center gap-4 bg-white text-slate-700 shadow-sm";
+                btn.innerHTML = `
+                    <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-500 font-bold text-sm shrink-0">${String.fromCharCode(65 + i)}</span>
+                    <span class="text-base">${opt}</span>
+                `;
+                btn.onclick = () => selectAnswer(i);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(choiceIdx) {
+            if (isAnswered) return;
+            isAnswered = true;
+            
+            const data = quizData[currentSubject][currentIdx];
+            const isCorrect = choiceIdx === data.c;
+            const btns = document.querySelectorAll('.option-btn');
+            
+            if (isCorrect) score += 10;
+            document.getElementById('live-score').innerText = score;
+
+            btns.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === data.c) {
+                    btn.classList.add('correct');
+                } else if (i === choiceIdx && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            showFeedback(isCorrect, data.e);
+            document.getElementById('btn-next').classList.remove('hidden');
+        }
+
+        function showFeedback(correct, explanation) {
+            const panel = document.getElementById('feedback-panel');
+            const title = document.getElementById('feedback-title');
+            const desc = document.getElementById('feedback-desc');
+            const iconWrap = document.getElementById('feedback-icon-container');
+            
+            panel.classList.remove('hidden');
+            title.innerText = correct ? "Correct Answer!" : "Incorrect Answer";
+            desc.innerText = explanation;
+            
+            if (correct) {
+                panel.className = "mt-10 p-6 rounded-3xl bg-emerald-50 border border-emerald-100 text-emerald-900";
+                iconWrap.className = "shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-emerald-500 text-white";
+                iconWrap.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>';
+            } else {
+                panel.className = "mt-10 p-6 rounded-3xl bg-rose-50 border border-rose-100 text-rose-900";
+                iconWrap.className = "shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-rose-500 text-white";
+                iconWrap.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>';
+            }
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < 30) {
+                updateProgress();
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const percent = (currentIdx / 30) * 100;
+            document.getElementById('progress-bar').style.width = percent + '%';
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score-val').innerText = score;
+            
+            let msg = "";
+            if (score >= 250) msg = "Outstanding! You have an advanced understanding.";
+            else if (score >= 200) msg = "Excellent! You've mastered the core concepts.";
+            else if (score >= 150) msg = "Not bad. You should review some topics.";
+            else msg = "Keep studying! Don't give up and review the explanations.";
+            
+            document.getElementById('result-status').innerText = msg;
+            window.scrollTo(0,0);
+        }
+
+        function restartQuiz() {
+            startQuiz(currentSubject);
+        }
+    </script>
+</body>
+</html>

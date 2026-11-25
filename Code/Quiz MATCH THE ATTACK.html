@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match the Attack - Threat Diagnostic Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        :root {
+            --electric-blue: #0066ff;
+            --deep-blue: #001a4d;
+            --cyber-yellow: #ffd700;
+            --neon-yellow: #ffea00;
+            --dark-bg: #0a0e27;
+            --glass-bg: rgba(10, 14, 39, 0.85);
+            --glass-border: rgba(0, 102, 255, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #b0c4de;
+            --card-bg: rgba(0, 26, 77, 0.6);
+            --input-bg: rgba(0, 102, 255, 0.1);
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        [data-theme="light"] {
+            --dark-bg: #e8f0fe;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(0, 102, 255, 0.3);
+            --text-primary: #001a4d;
+            --text-secondary: #0066ff;
+            --card-bg: rgba(0, 102, 255, 0.08);
+            --input-bg: rgba(0, 102, 255, 0.05);
+        }
+
+        body {
+            background: var(--dark-bg);
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 102, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 102, 255, 0.08) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 32px rgba(0, 102, 255, 0.3);
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-bar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-yellow), var(--electric-blue));
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+            border-radius: 15px 15px 0 0;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .header-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .header-item .icon { font-size: 1.3em; }
+        .header-item .label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header-item .value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: var(--cyber-yellow);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: linear-gradient(135deg, var(--electric-blue), var(--deep-blue));
+            border: 2px solid var(--cyber-yellow);
+            color: var(--cyber-yellow);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover { transform: scale(1.05); }
+
+        .game-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* START SCREEN */
+        .start-screen {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 8px 32px rgba(0, 102, 255, 0.3);
+        }
+
+        .start-screen h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, var(--cyber-yellow), var(--neon-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
+
+        .form-container {
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-container h3 {
+            color: var(--cyber-yellow);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: var(--cyber-yellow);
+            font-weight: 700;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--cyber-yellow);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        }
+
+        .instructions {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .instructions h3 {
+            color: var(--cyber-yellow);
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            padding: 6px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        .instructions li::before {
+            content: '?';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .attack-types {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .attack-types h3 {
+            color: var(--cyber-yellow);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .attack-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .attack-item {
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .attack-item .attack-icon { font-size: 1.3em; margin-bottom: 3px; }
+
+        .start-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--cyber-yellow), var(--neon-yellow));
+            color: var(--deep-blue);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* QUIZ SCREEN */
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-header h1 {
+            font-size: 1.8em;
+            background: linear-gradient(135deg, var(--cyber-yellow), var(--neon-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 102, 255, 0.2);
+        }
+
+        .stat-card .stat-icon { font-size: 1.3em; margin-bottom: 3px; }
+        .stat-card .stat-label {
+            font-size: 0.65em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-card .stat-value {
+            font-size: 1.4em;
+            font-weight: 900;
+            color: var(--cyber-yellow);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .progress-container {
+            background: var(--input-bg);
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-yellow));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .scenario-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 102, 255, 0.3);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-yellow));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .scenario-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--electric-blue), var(--deep-blue));
+            color: var(--cyber-yellow);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.85em;
+            border: 2px solid var(--cyber-yellow);
+            margin-bottom: 15px;
+        }
+
+        .scenario-title {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: var(--cyber-yellow);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .scenario-body {
+            background: var(--card-bg);
+            border-left: 4px solid var(--cyber-yellow);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        .scenario-body strong {
+            color: var(--cyber-yellow);
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--cyber-yellow);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            padding: 18px 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-size: 1em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--cyber-yellow);
+            background: rgba(255, 215, 0, 0.15);
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .option-btn .option-letter {
+            background: linear-gradient(135deg, var(--electric-blue), var(--deep-blue));
+            color: var(--cyber-yellow);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+            border: 2px solid var(--cyber-yellow);
+        }
+
+        .option-btn.correct {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: var(--success);
+            color: #5dff5d;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--success);
+            color: white;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: var(--danger);
+            color: #ff6b6b;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--danger);
+            color: white;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .feedback-box.show { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-box.correct {
+            background: rgba(40, 167, 69, 0.15);
+            border: 2px solid var(--success);
+        }
+
+        .feedback-box.incorrect {
+            background: rgba(220, 53, 69, 0.15);
+            border: 2px solid var(--danger);
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+            font-weight: 800;
+        }
+
+        .feedback-header.correct { color: #5dff5d; }
+        .feedback-header.incorrect { color: #ff6b6b; }
+
+        .feedback-explanation {
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .key-insight {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid var(--cyber-yellow);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .key-insight strong {
+            color: var(--cyber-yellow);
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--cyber-yellow), var(--neon-yellow));
+            color: var(--deep-blue);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .next-btn.show { display: block; }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* END SCREEN */
+        .end-screen {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 3px solid var(--cyber-yellow);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+            position: relative;
+            display: none;
+        }
+
+        .end-screen::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-yellow), var(--electric-blue));
+            border-radius: 20px 20px 0 0;
+        }
+
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .certificate-header h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, var(--cyber-yellow), var(--neon-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .student-info-card {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(255, 215, 0, 0.1));
+            border: 2px solid var(--cyber-yellow);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .student-info-card h3 {
+            color: var(--cyber-yellow);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .student-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .student-info-item {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--cyber-yellow);
+        }
+
+        .student-info-item .info-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .student-info-item .info-value {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .rank-display {
+            background: linear-gradient(135deg, var(--electric-blue), var(--deep-blue));
+            border: 3px solid var(--cyber-yellow);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .rank-display .rank-icon { font-size: 4em; }
+        .rank-display .rank-title {
+            font-size: 1.8em;
+            color: var(--cyber-yellow);
+            font-weight: 900;
+            margin: 10px 0;
+        }
+
+        .rank-display .rank-desc {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .result-stat {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .result-stat .stat-icon { font-size: 1.5em; }
+        .result-stat .stat-label {
+            font-size: 0.7em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        .result-stat .stat-value {
+            font-size: 1.6em;
+            font-weight: 900;
+            color: var(--cyber-yellow);
+            margin-top: 5px;
+        }
+
+        .attack-breakdown {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .attack-breakdown h3 {
+            color: var(--cyber-yellow);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .attack-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(0, 102, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--cyber-yellow);
+        }
+
+        .attack-stat .attack-name {
+            font-weight: 700;
+            font-size: 0.95em;
+        }
+
+        .attack-stat .attack-score {
+            color: var(--cyber-yellow);
+            font-weight: 900;
+            font-size: 1.1em;
+        }
+
+        .submission-instruction {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(0, 102, 255, 0.1));
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .submission-instruction h3 {
+            color: var(--success);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .submission-instruction ol {
+            padding-left: 25px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+
+        .submission-instruction ol li strong {
+            color: var(--cyber-yellow);
+        }
+
+        .action-buttons-end {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .restart-btn, .print-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, var(--electric-blue), var(--deep-blue));
+            color: var(--cyber-yellow);
+            border: 2px solid var(--cyber-yellow);
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, var(--cyber-yellow), var(--neon-yellow));
+            color: var(--deep-blue);
+        }
+
+        .restart-btn:hover, .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        @media print {
+            body { background: white; }
+            .header-bar, .action-buttons-end, .theme-toggle { display: none !important; }
+            .end-screen { border: 3px solid #000; box-shadow: none; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .result-stats { grid-template-columns: repeat(2, 1fr); }
+            .student-info-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .attack-grid { grid-template-columns: repeat(2, 1fr); }
+            .action-buttons-end { grid-template-columns: 1fr; }
+            .start-screen h1, .certificate-header h1 { font-size: 1.6em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header-bar">
+        <div class="header-item">
+            <span class="icon">??</span>
+            <div>
+                <div class="label">Waktu</div>
+                <div class="value" id="clock">--:--:--</div>
+            </div>
+        </div>
+        <div class="header-item">
+            <span class="icon">??</span>
+            <div>
+                <div class="label">IP Address</div>
+                <div class="value" id="ipAddress">Loading...</div>
+            </div>
+        </div>
+        <div class="header-item">
+            <span class="icon">??</span>
+            <div>
+                <div class="label">Lokasi</div>
+                <div class="value" id="location">Loading...</div>
+            </div>
+        </div>
+        <button class="theme-toggle" id="themeBtn">
+            <span id="themeIcon">??</span>
+            <span id="themeText">Dark</span>
+        </button>
+    </div>
+
+    <div class="game-container">
+        <!-- START SCREEN -->
+        <div id="startScreen" class="start-screen">
+            <h1> MATCH THE ATTACK</h1>
+            <p class="subtitle">Threat Diagnostic Quiz - 20 Real-World Scenarios</p>
+            
+            <div class="form-container">
+                <h3>?? Identitas Mahasiswa</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">Nama Lengkap *</label>
+                        <input type="text" id="studentName" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentNIM">NIM *</label>
+                        <input type="text" id="studentNIM" placeholder="Masukkan NIM" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentClass">Kelas *</label>
+                        <input type="text" id="studentClass" placeholder="Contoh: TI-4A" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentDate">Tanggal *</label>
+                        <input type="date" id="studentDate" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attack-types">
+                <h3>?? 7 Teknik yang Akan Diuji</h3>
+                <div class="attack-grid">
+                    <div class="attack-item"><div class="attack-icon"></div>Phishing</div>
+                    <div class="attack-item"><div class="attack-icon">??</div>Spear Phishing</div>
+                    <div class="attack-item"><div class="attack-icon">??</div>Whaling</div>
+                    <div class="attack-item"><div class="attack-icon">??</div>Vishing</div>
+                    <div class="attack-item"><div class="attack-icon">??</div>Smishing</div>
+                    <div class="attack-item"><div class="attack-icon">??</div>BEC</div>
+                    <div class="attack-item"><div class="attack-icon">?</div>Watering Hole</div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3> Instruksi:</h3>
+                <ul>
+                    <li>Anda akan menghadapi <strong>20 skenario kasus nyata</strong></li>
+                    <li>Setiap skenario adalah <strong>insiden keamanan</strong> yang harus diidentifikasi</li>
+                    <li>Tugas Anda: <strong>Identifikasi jenis serangan</strong> yang digunakan</li>
+                    <li>Setiap jawaban benar = <strong>+100 poin</strong> | Salah = <strong>-50 poin</strong></li>
+                    <li>Anda punya <strong>3 nyawa</strong> - game over jika habis!</li>
+                    <li>Setiap jawaban akan diberikan <strong>penjelasan detail</strong></li>
+                </ul>
+            </div>
+
+            <button class="start-btn" onclick="startQuiz()">?? MULAI QUIZ</button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quizScreen" style="display: none;">
+            <div class="quiz-header">
+                <h1>?? ANALISIS SERANGAN</h1>
+                <p id="scenarioInfo">Skenario 1 dari 20</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-icon">??</div>
+                    <div class="stat-label">Skor</div>
+                    <div class="stat-value" id="scoreDisplay">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">?</div>
+                    <div class="stat-label">Benar</div>
+                    <div class="stat-value" id="correctDisplay">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">?</div>
+                    <div class="stat-label">Salah</div>
+                    <div class="stat-value" id="wrongDisplay">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">??</div>
+                    <div class="stat-label">Nyawa</div>
+                    <div class="stat-value" id="livesDisplay">??????</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">??</div>
+                    <div class="stat-label">Akurasi</div>
+                    <div class="stat-value" id="accuracyDisplay">0%</div>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <div class="scenario-badge" id="scenarioBadge">?? SKENARIO #1</div>
+                <div class="scenario-title" id="scenarioTitle">-</div>
+                <div class="scenario-body" id="scenarioBody">-</div>
+                <div class="question-text" id="questionText">-</div>
+                <div class="options-grid" id="optionsGrid"></div>
+                <div class="feedback-box" id="feedbackBox">
+                    <div class="feedback-header" id="feedbackHeader">-</div>
+                    <div class="feedback-explanation" id="feedbackExplanation">-</div>
+                    <div class="key-insight" id="keyInsight">-</div>
+                </div>
+                <button class="next-btn" id="nextBtn" onclick="nextScenario()">LANJUT ?</button>
+            </div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="endScreen" class="end-screen">
+            <div class="certificate-header">
+                <h1>?? HASIL QUIZ MATCH THE ATTACK</h1>
+                <p style="color: var(--text-secondary); font-size: 1em;">Threat Diagnostic Analysis - CompTIA Security+ SY0-701</p>
+            </div>
+
+            <div class="student-info-card">
+                <h3>?? Informasi Mahasiswa</h3>
+                <div class="student-info-grid">
+                    <div class="student-info-item">
+                        <div class="info-label">Nama Lengkap</div>
+                        <div class="info-value" id="resultName">-</div>
+                    </div>
+                    <div class="student-info-item">
+                        <div class="info-label">NIM</div>
+                        <div class="info-value" id="resultNIM">-</div>
+                    </div>
+                    <div class="student-info-item">
+                        <div class="info-label">Kelas</div>
+                        <div class="info-value" id="resultClass">-</div>
+                    </div>
+                    <div class="student-info-item">
+                        <div class="info-label">Tanggal</div>
+                        <div class="info-value" id="resultDate">-</div>
+                    </div>
+                    <div class="student-info-item">
+                        <div class="info-label">IP Address</div>
+                        <div class="info-value" id="resultIP">-</div>
+                    </div>
+                    <div class="student-info-item">
+                        <div class="info-label">Lokasi</div>
+                        <div class="info-value" id="resultLocation">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rank-display">
+                <div class="rank-icon" id="rankIcon"></div>
+                <div class="rank-title" id="rankTitle">-</div>
+                <div class="rank-desc" id="rankDescription">-</div>
+            </div>
+
+            <div class="result-stats">
+                <div class="result-stat">
+                    <div class="stat-icon">??</div>
+                    <div class="stat-label">Skor Akhir</div>
+                    <div class="stat-value" id="finalScore">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="stat-icon">?</div>
+                    <div class="stat-label">Benar</div>
+                    <div class="stat-value" id="finalCorrect">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="stat-icon">?</div>
+                    <div class="stat-label">Salah</div>
+                    <div class="stat-value" id="finalWrong">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="stat-icon">??</div>
+                    <div class="stat-label">Akurasi</div>
+                    <div class="stat-value" id="finalAccuracy">0%</div>
+                </div>
+            </div>
+
+            <div class="attack-breakdown">
+                <h3> Performa per Teknik Serangan</h3>
+                <div id="attackBreakdownContent"></div>
+            </div>
+
+            <div id="gameStatusMessage" style="text-align: center; margin: 15px 0;"></div>
+
+            <div class="submission-instruction">
+                <h3>?? Cara Pengumpulan Tugas</h3>
+                <ol>
+                    <li><strong>Screenshot</strong> halaman hasil ini (tekan <strong>Win + Shift + S</strong>)</li>
+                    <li>Pastikan <strong>semua informasi terlihat jelas</strong></li>
+                    <li>Simpan dengan nama: <strong>[NIM]_[Nama]_MatchTheAttack.png</strong></li>
+                    <li>Upload ke <strong>Google Drive</strong> yang telah dibagikan</li>
+                    <li>Upload sebelum <strong>deadline</strong></li>
+                </ol>
+            </div>
+
+            <div class="action-buttons-end">
+                <button class="print-btn" onclick="window.print()">??? Print / Save PDF</button>
+                <button class="restart-btn" onclick="restartQuiz()">?? Main Lagi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== SCENARIO DATA (20 scenarios) =====
+        const scenarios = [
+            {
+                title: "Kasus 1: Email Netflix Massal",
+                body: "Seorang mahasiswa menerima email dengan subjek 'Your Netflix payment failed' dari alamat support@netflix-billing.com. Email berisi pesan generik 'Dear Customer' dan meminta update payment info dalam 24 jam. Email ini dikirim ke <strong>2 juta pengguna</strong> sekaligus dengan konten yang sama persis.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Spear Phishing", " Whaling", "?? BEC"],
+                correct: 0,
+                explanation: "Ini adalah <strong>Phishing klasik</strong> - dikirim massal (2 juta user), konten generik ('Dear Customer'), tidak ada riset personal tentang target. Attacker 'menyebar jala' dan berharap ada yang klik.",
+                keyInsight: "?? <strong>Ciri Phishing:</strong> Volume tinggi, konten generik, tidak personal, target massal. Berbeda dengan Spear Phishing yang targeted dan personal.",
+                attack: "Phishing"
+            },
+            {
+                title: "Kasus 2: Email Personal ke HR Manager",
+                body: "HR Manager bernama Sarah Johnson menerima email dari 'recruiter@techcorp-hr.com'. Email menyebut nama Sarah, jabatannya, dan <strong>merujuk ke lowongan spesifik</strong> yang baru diposting di LinkedIn perusahaan. Email meminta Sarah klik link untuk 'review kandidat'. Attacker melakukan riset mendalam dari LinkedIn dan website perusahaan sebelum mengirim email.",
+                question: "Jenis serangan apa ini?",
+                options: [" Phishing", "?? Spear Phishing", "?? Whaling", " Smishing"],
+                correct: 1,
+                explanation: "Ini adalah <strong>Spear Phishing</strong> - attacker melakukan riset personal (OSINT) tentang target (nama, jabatan, lowongan), email sangat personal dan targeted ke individu spesifik (HR Manager).",
+                keyInsight: "?? <strong>Ciri Spear Phishing:</strong> Riset OSINT mendalam, email personal, targeted ke individu/organisasi spesifik, tingkat keberhasilan tinggi.",
+                attack: "Spear Phishing"
+            },
+            {
+                title: "Kasus 3: Email ke CEO untuk Transfer Urgent",
+                body: "CEO perusahaan multinasional menerima email dari 'legal@company-legal.com' yang mengaku sebagai lawyer eksternal. Email menyebut <strong>masalah hukum confidential</strong> dan meminta CEO transfer $500.000 ke 'rekening escrow' dalam 2 jam. Email sangat formal, menggunakan terminologi hukum, dan menekankan kerahasiaan.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Spear Phishing", "?? Whaling", "?? BEC", "?? Vishing"],
+                correct: 1,
+                explanation: "Ini adalah <strong>Whaling</strong> - target adalah C-Suite (CEO), taruhan tinggi ($500K), email sophisticated dengan terminologi profesional. Whaling = spear phishing yang menargetkan 'ikan besar' (executives).",
+                keyInsight: "?? <strong>Ciri Whaling:</strong> Target C-Suite (CEO/CFO/CTO), taruhan sangat tinggi, email sangat sophisticated, sering impersonate lawyer/board/regulator.",
+                attack: "Whaling"
+            },
+            {
+                title: "Kasus 4: Telepon dari 'Microsoft Support'",
+                body: "Seorang karyawan menerima telepon dari seseorang yang mengaku dari 'Microsoft Technical Support'. Penelepon menggunakan <strong>suara yang meyakinkan</strong> dan jargon teknis, bilang komputer karyawan terdeteksi terinfeksi virus. Penelepon minta <strong>remote access segera</strong> dan menekan dengan urgensi: 'Jika tidak sekarang, data Anda akan hilang!'",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Vishing", "?? Smishing", "??? Watering Hole"],
+                correct: 1,
+                explanation: "Ini adalah <strong>Vishing (Voice Phishing)</strong> - serangan via telepon dengan otoritas verbal (pura-pura Microsoft Support) dan urgensi langsung. Sulit di-trace karena nomor bisa di-spoof.",
+                keyInsight: "?? <strong>Ciri Vishing:</strong> Via telepon, otoritas verbal, urgensi langsung, caller ID spoofing, social engineering pressure. Microsoft TIDAK PERNAH nelpon user duluan!",
+                attack: "Vishing"
+            },
+            {
+                title: "Kasus 5: SMS Paket Tertahan",
+                body: "User menerima SMS dari nomor pribadi (+6281234567890): 'Paket Anda tertahan di bea cukai. Bayar biaya Rp 150.000 untuk rilis: <strong>bit.ly/3xK9mP</strong>'. SMS menggunakan <strong>URL shortener</strong> untuk menyamarkan link asli. Banyak user yang klik karena penasaran dengan paket mereka.",
+                question: "Jenis serangan apa ini?",
+                options: [" Phishing", "?? Vishing", "?? Smishing", "??? Watering Hole"],
+                correct: 2,
+                explanation: "Ini adalah <strong>Smishing (SMS Phishing)</strong> - serangan via SMS dengan link pendek (URL shortener). Orang lebih percaya SMS dari email, dan link pendek menyamarkan destination asli.",
+                keyInsight: "?? <strong>Ciri Smishing:</strong> Via SMS, link pendek (bit.ly/tinyurl), target mobile user, sering combined dengan SIM swap attack untuk intercept OTP.",
+                attack: "Smishing"
+            },
+            {
+                title: "Kasus 6: Email CEO Palsu ke Finance",
+                body: "Staff finance menerima email dari alamat yang <strong>terlihat seperti email CEO</strong> (ceo@company.com tapi sebenarnya ceo@cornpany.com - typo). Email bilang: 'Saya di meeting dengan investor, tidak bisa bicara. Tolong transfer $85.000 ke vendor baru ini. <strong>Confidential, jangan diskusi dengan siapa pun.</strong>' Tidak ada malware, hanya manipulasi psikologis.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Spear Phishing", " Whaling", "?? BEC", " Phishing"],
+                correct: 2,
+                explanation: "Ini adalah <strong>BEC (Business Email Compromise)</strong> - attacker impersonate executive untuk minta wire transfer. <strong>NO MALWARE</strong> - murni social engineering. Ciri khas: urgency, confidentiality, wire fraud.",
+                keyInsight: "?? <strong>Ciri BEC:</strong> Target finance department, wire fraud, NO MALWARE (hanya manipulasi), impersonate executive/vendor, tekanan confidentiality & urgency.",
+                attack: "BEC"
+            },
+            {
+                title: "Kasus 7: Website Asosiasi Industri Di-hack",
+                body: "Attacker (state-sponsored) mengidentifikasi bahwa <strong>karyawan perusahaan energi</strong> sering membaca berita di website asosiasi industri energi. Attacker hack website tersebut dan <strong>inject malware</strong>. Ketika karyawan buka website untuk baca berita, malware terinstall otomatis via drive-by download. <strong>Tidak ada email yang dikirim</strong> - target datang sendiri.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Spear Phishing", "? Watering Hole", "?? BEC"],
+                correct: 2,
+                explanation: "Ini adalah <strong>Watering Hole Attack</strong> - attacker tidak mengejar target, tapi meracuni 'sumur' (website) yang pasti dikunjungi target group. Target terinfeksi saat browsing normal.",
+                keyInsight: "?? <strong>Ciri Watering Hole:</strong> Via web, target grup spesifik, sabotage situs yang dipercaya, drive-by download (no click needed), attacker menunggu target datang.",
+                attack: "Watering Hole"
+            },
+            {
+                title: "Kasus 8: Email 'Reset Password' Massal",
+                body: "10.000 mahasiswa universitas menerima email identik: 'URGENT: Reset password akun kampus Anda sekarang atau akun akan dihapus dalam 24 jam. Klik: campus-verify.tk/reset'. Email <strong>tidak menyebut nama</strong> mahasiswa, tidak ada personalisasi, dikirim dari alamat random (admin@campus-verify.tk).",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", " Spear Phishing", "?? Whaling", "?? Smishing"],
+                correct: 0,
+                explanation: "Ini adalah <strong>Phishing massal</strong> - 10.000 email identik, tidak ada personalisasi, urgency palsu, domain mencurigakan. Attacker hanya 'menyebar jala' tanpa riset target.",
+                keyInsight: "?? <strong>Red Flags Phishing:</strong> Volume tinggi, generik, urgency palsu, domain mencurigakan, generic greeting ('Dear Customer/Student').",
+                attack: "Phishing"
+            },
+            {
+                title: "Kasus 9: Email Personal ke Developer",
+                body: "Seorang developer bernama Budi menerima email dari 'devops-lead@company-tech.com'. Email menyebut: 'Pak Budi, saya dari tim DevOps. Tolong <strong>review pull request #847</strong> di repository GitHub kita. Link: github-company.ml/pr847'. Email terlihat sangat legitimate karena menyebut nama Budi, timnya, dan nomor PR yang spesifik. Attacker riset dari LinkedIn dan GitHub Budi.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Spear Phishing", "??? Watering Hole", "?? Vishing"],
+                correct: 1,
+                explanation: "Ini adalah <strong>Spear Phishing</strong> - sangat targeted ke Budi, menggunakan informasi spesifik (nama, tim, nomor PR), hasil riset OSINT dari LinkedIn & GitHub. Email terlihat sangat legitimate.",
+                keyInsight: "?? <strong>Spear Phishing vs Phishing:</strong> Spear = targeted + personal + riset OSINT. Phishing = massal + generik + no research. Spear jauh lebih berbahaya!",
+                attack: "Spear Phishing"
+            },
+            {
+                title: "Kasus 10: Telepon 'Bank Mandiri' Minta OTP",
+                body: "Nasabah bank menerima telepon dari nomor yang <strong>terlihat seperti call center resmi</strong> (021-5050xxxx). Penelepon bilang: 'Ada transaksi mencurigakan Rp 50 juta di akun Anda. Untuk verifikasi, <strong>tolong sebutkan kode OTP</strong> yang baru dikirim ke HP Anda.' Penelepon terdengar profesional dan menggunakan script yang meyakinkan.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Vishing", "?? Smishing", "?? Phishing", "?? BEC"],
+                correct: 0,
+                explanation: "Ini adalah <strong>Vishing</strong> - serangan via telepon dengan caller ID spoofing (terlihat seperti call center resmi). Attacker minta OTP yang adalah 'kunci' untuk akses akun. Bank TIDAK PERNAH minta OTP via telepon!",
+                keyInsight: "?? <strong>Aturan Emas:</strong> Bank/instansi resmi TIDAK PERNAH minta OTP, password, atau PIN via telepon. OTP hanya untuk user input sendiri di app/website resmi.",
+                attack: "Vishing"
+            },
+            {
+                title: "Kasus 11: SMS 'Anda Menang iPhone 15'",
+                body: "User menerima SMS: 'SELAMAT! Nomor Anda terpilih menang iPhone 15 Pro Max. Klaim hadiah: <strong>claim-prize.xyz/iphone</strong>. Biaya pengiriman Rp 50.000. Expires 24 jam!' SMS dari nomor random dan menggunakan <strong>link pendek mencurigakan</strong>. Banyak user yang klik karena excited menang hadiah.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Vishing", "?? Smishing", "? Watering Hole"],
+                correct: 2,
+                explanation: "Ini adalah <strong>Smishing</strong> - SMS dengan hadiah palsu, link mencurigakan, urgency palsu (expires 24 jam). Target mobile user yang mudah tergiur hadiah.",
+                keyInsight: "?? <strong>Red Flags Smishing:</strong> Hadiah terlalu bagus untuk jadi kenyataan, link pendek mencurigakan, urgency palsu, nomor random, minta 'biaya pengiriman'.",
+                attack: "Smishing"
+            },
+            {
+                title: "Kasus 12: Email Vendor Palsu ke Procurement",
+                body: "Staff procurement menerima email dari 'vendor@supplier-company.com' (email vendor yang <strong>sudah di-hack</strong>). Email bilang: 'Bank details kami berubah. Tolong transfer pembayaran invoice #INV-2026-0847 sebesar Rp 500 juta ke <strong>rekening baru</strong> ini. Details di attachment.' Tidak ada malware, hanya perubahan rekening untuk wire fraud.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Spear Phishing", " BEC", "?? Phishing", "??? Watering Hole"],
+                correct: 1,
+                explanation: "Ini adalah <strong>BEC (Vendor Email Compromise)</strong> - variant BEC dimana attacker hack email vendor dan minta perubahan rekening. Target finance/procurement, wire fraud, NO MALWARE.",
+                keyInsight: "?? <strong>Vendor BEC:</strong> Selalu verify perubahan rekening via telepon ke nomor yang sudah known (bukan nomor di email). Multi-factor approval untuk transfer besar.",
+                attack: "BEC"
+            },
+            {
+                title: "Kasus 13: Website Free Software Foundation Di-hack",
+                body: "Attacker hack website <strong>Free Software Foundation (FSF)</strong> yang sering dikunjungi developer Linux. Attacker ganti link download <strong>GNU Emacs</strong> (text editor populer) dengan versi yang sudah dimodifikasi malware. Developer yang download Emacs dari website FSF otomatis dapat malware. Ini adalah supply chain attack via trusted website.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", " Spear Phishing", "??? Watering Hole", "?? BEC"],
+                correct: 2,
+                explanation: "Ini adalah <strong>Watering Hole Attack</strong> dengan unsur supply chain. Attacker compromise trusted website (FSF) yang sering dikunjungi target group (developer). Target download software 'resmi' tapi sudah dimodifikasi.",
+                keyInsight: "?? <strong>Watering Hole + Supply Chain:</strong> Kombinasi berbahaya - trusted source compromised. Selalu verify checksum/hash software yang didownload.",
+                attack: "Watering Hole"
+            },
+            {
+                title: "Kasus 14: Email 'Dear Valued Customer' dari PayPal",
+                body: "Jutaan user menerima email dari 'security@paypa1-security.com' (perhatikan: <strong>paypa1</strong> dengan angka 1). Email bilang: 'Dear Valued Customer, akun Anda terbatas. Verifikasi dalam 24 jam.' Email identik dikirim ke <strong>5 juta user</strong> dengan konten sama persis. Tidak ada personalisasi sama sekali.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Spear Phishing", "?? Whaling", "?? Smishing"],
+                correct: 0,
+                explanation: "Ini adalah <strong>Phishing massal</strong> dengan typosquatting domain (paypa1 vs paypal). 5 juta email identik, 'Dear Valued Customer' (generic greeting), urgency palsu. Volume tinggi, generik.",
+                keyInsight: "?? <strong>Phishing + Typosquatting:</strong> Kombinasi umum. Selalu cek domain dengan teliti - paypa1.com ? paypal.com. Huruf 'l' kecil vs angka '1' sering disamarkan.",
+                attack: "Phishing"
+            },
+            {
+                title: "Kasus 15: Email ke CFO dari 'Auditor External'",
+                body: "CFO perusahaan menerima email dari 'auditor@big4-firm.com' yang mengaku dari auditor external. Email sangat formal, menyebut <strong>quarterly review Q4</strong>, dan minta akses ke financial system untuk 'audit compliance'. Email menggunakan terminologi akuntansi yang tepat dan terlihat sangat legitimate. Target: C-Suite (CFO).",
+                question: "Jenis serangan apa ini?",
+                options: [" Spear Phishing", "?? Whaling", "?? BEC", "?? Phishing"],
+                correct: 1,
+                explanation: "Ini adalah <strong>Whaling</strong> - target C-Suite (CFO), sophisticated email dengan terminologi profesional, impersonate auditor external. Whaling menargetkan 'ikan besar' dengan akses tertinggi.",
+                keyInsight: "?? <strong>Whaling Defense:</strong> Executive training khusus, verification via channel terpisah (telepon ke nomor known), multi-factor approval untuk akses sensitif.",
+                attack: "Whaling"
+            },
+            {
+                title: "Kasus 16: Telepon 'Polisi' dengan Ancaman",
+                body: "Seseorang menerima telepon dari 'polisi' yang bilang: 'Ada kasus penipuan dengan nama Anda. Kami perlu investigasi. <strong>Tolong transfer Rp 100 juta ke rekening aman</strong> untuk pembuktian. Jika tidak, Anda akan ditangkap hari ini.' Penelepon menggunakan <strong>teknik intimidasi</strong> dan tekanan waktu.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Vishing", "?? Smishing", " Phishing", "?? BEC"],
+                correct: 0,
+                explanation: "Ini adalah <strong>Vishing dengan social engineering pressure</strong> - telepon dengan otoritas palsu (polisi), intimidasi, urgency ekstrem. Teknik ini sangat efektif karena target panik dan tidak berpikir jernih.",
+                keyInsight: " <strong>Polisi TIDAK PERNAH</strong> minta transfer uang via telepon untuk 'rekening aman'. Ini modus penipuan klasik. Selalu hang up dan hubungi polisi langsung via 110.",
+                attack: "Vishing"
+            },
+            {
+                title: "Kasus 17: SMS 'Bank BCA: Akun Diblokir'",
+                body: "Nasabah BCA menerima SMS dari nomor pribadi: 'Bank BCA: Akun Anda diblokir karena aktivitas mencurigakan. Verifikasi segera: <strong>bca-verify.tk/auth</strong>'. SMS menggunakan domain <strong>.tk (gratis)</strong> yang mencurigakan. Banyak nasabah panik dan klik link karena takut akun diblokir.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", " Vishing", "?? Smishing", "??? Watering Hole"],
+                correct: 2,
+                explanation: "Ini adalah <strong>Smishing</strong> - SMS phishing yang meniru bank resmi, menggunakan domain mencurigakan (.tk), urgency palsu (akun diblokir). Target mobile user yang panik.",
+                keyInsight: "?? <strong>Bank TIDAK PERNAH</strong> kirim SMS dengan link untuk verifikasi. Selalu buka app banking resmi atau kunjungi cabang. Domain .tk/.ml/.xyz sering untuk phishing.",
+                attack: "Smishing"
+            },
+            {
+                title: "Kasus 18: Email 'CEO' Minta Transfer Rahasia",
+                body: "Finance manager menerima email dari alamat yang <strong>terlihat seperti email CEO</strong> (ceo@company.com tapi sebenarnya ceo@cornpany.com - typo 'o' jadi 'rn'). Email: 'Saya di meeting confidential dengan investor. Tolong transfer $200K ke vendor baru ini. <strong>Jangan diskusi dengan siapa pun sampai deal selesai.</strong>' Email menekankan secrecy dan urgency.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Whaling", "?? BEC", "?? Spear Phishing", " Phishing"],
+                correct: 1,
+                explanation: "Ini adalah <strong>BEC (CEO Fraud)</strong> - impersonate CEO via typo domain, target finance, wire fraud, tekanan confidentiality ('jangan diskusi'). Ciri khas BEC: NO MALWARE, hanya manipulasi.",
+                keyInsight: "?? <strong>BEC Red Flags:</strong> Typo domain (cornpany vs company), tekanan confidentiality, urgency, wire transfer, 'jangan diskusi dengan siapa pun'. Selalu verify via telepon!",
+                attack: "BEC"
+            },
+            {
+                title: "Kasus 19: Website Vendor Alat Medis Di-hack",
+                body: "Attacker (ransomware group) mengidentifikasi bahwa <strong>staf rumah sakit</strong> sering order equipment dari website vendor alat medis tertentu. Attacker hack website vendor dan <strong>inject ransomware</strong>. Ketika staf RS download software update untuk alat medis dari website vendor, ransomware terinstall. 10 rumah sakit lumpuh, 50.000 pasien terdampak.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", " Spear Phishing", "??? Watering Hole", "?? BEC"],
+                correct: 2,
+                explanation: "Ini adalah <strong>Watering Hole Attack</strong> - attacker compromise trusted website (vendor alat medis) yang sering dikunjungi target group (staf RS). Target download 'update resmi' tapi dapat ransomware.",
+                keyInsight: "?? <strong>Watering Hole di Healthcare:</strong> Sangat berbahaya karena impact ke pasien. Defense: web filtering, patching, backup terisolasi, network segmentation.",
+                attack: "Watering Hole"
+            },
+            {
+                title: "Kasus 20: Email Personal ke Dosen tentang 'Grant Research'",
+                body: "Seorang dosen peneliti menerima email dari 'research-grant@foundation-edu.org'. Email menyebut <strong>nama dosen, bidang penelitian, dan grant yang sedang diajukan</strong>. Email minta dosen klik link untuk 'review proposal grant'. Attacker riset dari website universitas, Google Scholar, dan LinkedIn dosen. Email sangat personal dan targeted.",
+                question: "Jenis serangan apa ini?",
+                options: ["?? Phishing", "?? Spear Phishing", "?? Whaling", "? Watering Hole"],
+                correct: 1,
+                explanation: "Ini adalah <strong>Spear Phishing</strong> - sangat targeted ke dosen spesifik, menggunakan informasi personal (nama, bidang research, grant), hasil riset OSINT mendalam dari multiple sources.",
+                keyInsight: " <strong>Spear Phishing di Akademik:</strong> Target researcher untuk curi intellectual property. Defense: MFA, email filtering, verification via channel terpisah untuk grant/funding.",
+                attack: "Spear Phishing"
+            }
+        ];
+
+        // ===== GAME STATE =====
+        let currentScenario = 0;
+        let score = 0;
+        let correct = 0;
+        let wrong = 0;
+        let lives = 3;
+        let studentData = {};
+        let attackStats = {
+            'Phishing': { correct: 0, total: 0 },
+            'Spear Phishing': { correct: 0, total: 0 },
+            'Whaling': { correct: 0, total: 0 },
+            'Vishing': { correct: 0, total: 0 },
+            'Smishing': { correct: 0, total: 0 },
+            'BEC': { correct: 0, total: 0 },
+            'Watering Hole': { correct: 0, total: 0 }
+        };
+
+        // ===== HEADER FUNCTIONS =====
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        async function getIPAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                document.getElementById('ipAddress').textContent = data.ip;
+                try {
+                    const locResponse = await fetch(`https://ipapi.co/${data.ip}/json/`);
+                    const locData = await locResponse.json();
+                    document.getElementById('location').textContent = `${locData.city || 'Unknown'}, ${locData.country_name || 'Unknown'}`;
+                } catch (e) {
+                    document.getElementById('location').textContent = 'Indonesia';
+                }
+            } catch (e) {
+                document.getElementById('ipAddress').textContent = '192.168.1.1';
+                document.getElementById('location').textContent = 'Local Network';
+            }
+        }
+        getIPAddress();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            document.getElementById('themeIcon').textContent = newTheme === 'light' ? '??' : '??';
+            document.getElementById('themeText').textContent = newTheme === 'light' ? 'Light' : 'Dark';
+            localStorage.setItem('theme', newTheme);
+        }
+        document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'light') {
+            document.getElementById('themeIcon').textContent = '??';
+            document.getElementById('themeText').textContent = 'Light';
+        }
+
+        document.getElementById('studentDate').valueAsDate = new Date();
+
+        // ===== QUIZ FUNCTIONS =====
+        function startQuiz() {
+            const name = document.getElementById('studentName').value.trim();
+            const nim = document.getElementById('studentNIM').value.trim();
+            const kelas = document.getElementById('studentClass').value.trim();
+            const tanggal = document.getElementById('studentDate').value;
+
+            if (!name || !nim || !kelas || !tanggal) {
+                alert('?? Mohon lengkapi semua data identitas mahasiswa!');
+                return;
+            }
+
+            studentData = {
+                name: name,
+                nim: nim,
+                class: kelas,
+                date: tanggal,
+                ip: document.getElementById('ipAddress').textContent,
+                location: document.getElementById('location').textContent
+            };
+
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            currentScenario = 0;
+            score = 0;
+            correct = 0;
+            wrong = 0;
+            lives = 3;
+            attackStats = {
+                'Phishing': { correct: 0, total: 0 },
+                'Spear Phishing': { correct: 0, total: 0 },
+                'Whaling': { correct: 0, total: 0 },
+                'Vishing': { correct: 0, total: 0 },
+                'Smishing': { correct: 0, total: 0 },
+                'BEC': { correct: 0, total: 0 },
+                'Watering Hole': { correct: 0, total: 0 }
+            };
+            loadScenario();
+        }
+
+        function loadScenario() {
+            const scenario = scenarios[currentScenario];
+            document.getElementById('scenarioBadge').textContent = `?? SKENARIO #${currentScenario + 1}`;
+            document.getElementById('scenarioInfo').textContent = `Skenario ${currentScenario + 1} dari ${scenarios.length}`;
+            document.getElementById('scenarioTitle').textContent = scenario.title;
+            document.getElementById('scenarioBody').innerHTML = scenario.body;
+            document.getElementById('questionText').textContent = scenario.question;
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            scenario.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + index)}</span><span>${option}</span>`;
+                btn.onclick = () => makeDecision(index);
+                optionsGrid.appendChild(btn);
+            });
+
+            document.getElementById('feedbackBox').classList.remove('show');
+            document.getElementById('feedbackBox').className = 'feedback-box';
+            document.getElementById('nextBtn').classList.remove('show');
+
+            const progress = (currentScenario / scenarios.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            updateStats();
+        }
+
+        function makeDecision(selectedIndex) {
+            const scenario = scenarios[currentScenario];
+            const isCorrect = selectedIndex === scenario.correct;
+            const buttons = document.querySelectorAll('.option-btn');
+
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === scenario.correct) {
+                    btn.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            // Update attack stats
+            attackStats[scenario.attack].total++;
+            if (isCorrect) {
+                attackStats[scenario.attack].correct++;
+                score += 100;
+                correct++;
+            } else {
+                score = Math.max(0, score - 50);
+                wrong++;
+                lives--;
+            }
+
+            // Show feedback
+            const feedbackBox = document.getElementById('feedbackBox');
+            const feedbackHeader = document.getElementById('feedbackHeader');
+            const feedbackExplanation = document.getElementById('feedbackExplanation');
+            const keyInsight = document.getElementById('keyInsight');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('correct');
+                feedbackHeader.className = 'feedback-header correct';
+                feedbackHeader.innerHTML = '? BENAR! Analisis yang tajam!';
+            } else {
+                feedbackBox.classList.add('incorrect');
+                feedbackHeader.className = 'feedback-header incorrect';
+                feedbackHeader.innerHTML = '? KURANG TEPAT!';
+            }
+
+            feedbackExplanation.innerHTML = `<strong>Jawaban Benar: ${scenario.options[scenario.correct]}</strong><br><br>${scenario.explanation}`;
+            keyInsight.innerHTML = scenario.keyInsight;
+            feedbackBox.classList.add('show');
+
+            const nextBtn = document.getElementById('nextBtn');
+            if (lives <= 0) {
+                nextBtn.textContent = 'LIHAT HASIL AKHIR ?';
+            } else if (currentScenario >= scenarios.length - 1) {
+                nextBtn.textContent = 'SELESAI - LIHAT HASIL ?';
+            } else {
+                nextBtn.textContent = 'LANJUT KE SKENARIO BERIKUTNYA ?';
+            }
+            nextBtn.classList.add('show');
+
+            updateStats();
+        }
+
+        function nextScenario() {
+            if (lives <= 0) {
+                endQuiz();
+                return;
+            }
+
+            currentScenario++;
+            if (currentScenario >= scenarios.length) {
+                endQuiz();
+            } else {
+                loadScenario();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('correctDisplay').textContent = correct;
+            document.getElementById('wrongDisplay').textContent = wrong;
+            document.getElementById('livesDisplay').textContent = '??'.repeat(lives) + ''.repeat(3 - lives);
+            const total = correct + wrong;
+            const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+            document.getElementById('accuracyDisplay').textContent = accuracy + '%';
+        }
+
+        function getRank() {
+            if (score >= 1800) return { icon: '??', title: 'CISO', desc: 'Luar biasa! Anda master threat diagnosis!' };
+            if (score >= 1500) return { icon: '?', title: 'Threat Hunter', desc: 'Excellent! Anda bisa identifikasi semua serangan!' };
+            if (score >= 1200) return { icon: '?', title: 'Senior Security Analyst', desc: 'Very good! Anda analyst berpengalaman.' };
+            if (score >= 900) return { icon: '???', title: 'Security Analyst', desc: 'Good job! Anda analyst yang kompeten.' };
+            if (score >= 600) return { icon: '??', title: 'Junior Analyst', desc: 'Not bad! Terus latihan untuk naik level.' };
+            return { icon: '??', title: 'Script Kiddie', desc: 'Perlu banyak belajar lagi. Review 7 teknik serangan!' };
+        }
+
+        function formatDateIndo(dateStr) {
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        function endQuiz() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('endScreen').style.display = 'block';
+
+            document.getElementById('resultName').textContent = studentData.name;
+            document.getElementById('resultNIM').textContent = studentData.nim;
+            document.getElementById('resultClass').textContent = studentData.class;
+            document.getElementById('resultDate').textContent = formatDateIndo(studentData.date);
+            document.getElementById('resultIP').textContent = studentData.ip;
+            document.getElementById('resultLocation').textContent = studentData.location;
+
+            const rank = getRank();
+            document.getElementById('rankIcon').textContent = rank.icon;
+            document.getElementById('rankTitle').textContent = rank.title;
+            document.getElementById('rankDescription').textContent = rank.desc;
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalCorrect').textContent = correct;
+            document.getElementById('finalWrong').textContent = wrong;
+            const accuracy = scenarios.length > 0 ? Math.round((correct / scenarios.length) * 100) : 0;
+            document.getElementById('finalAccuracy').textContent = accuracy + '%';
+
+            // Attack breakdown
+            const attackContent = document.getElementById('attackBreakdownContent');
+            attackContent.innerHTML = '';
+            Object.keys(attackStats).forEach(attack => {
+                const stat = attackStats[attack];
+                if (stat.total > 0) {
+                    const attackDiv = document.createElement('div');
+                    attackDiv.className = 'attack-stat';
+                    attackDiv.innerHTML = `
+                        <span class="attack-name">${attack}</span>
+                        <span class="attack-score">${stat.correct}/${stat.total} Benar</span>
+                    `;
+                    attackContent.appendChild(attackDiv);
+                }
+            });
+
+            const statusMsg = document.getElementById('gameStatusMessage');
+            if (lives <= 0 && currentScenario < scenarios.length - 1) {
+                statusMsg.innerHTML = '<div style="background: linear-gradient(135deg, #8b0000, #dc3545); color: white; padding: 10px 20px; border-radius: 20px; display: inline-block;">?? GAME OVER - Nyawa Habis!</div>';
+            } else {
+                statusMsg.innerHTML = '<div style="background: linear-gradient(135deg, #1a5c1a, #28a745); color: white; padding: 10px 20px; border-radius: 20px; display: inline-block;">?? QUIZ BERHASIL DISELESAIKAN!</div>';
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function restartQuiz() {
+            document.getElementById('endScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
